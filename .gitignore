@@ -1,0 +1,8 @@
+.vs
+Bin/x64/Release/Example.pdb
+Bin/x64/Debug/Example.pdb
+Intermediate
+*.pdb
+.idea
+*.user
+*.suo
