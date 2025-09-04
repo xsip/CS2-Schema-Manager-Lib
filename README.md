@@ -84,7 +84,7 @@ int main() {
 ```
 
 # Example Output:
-![Example Output](https://raw.githubusercontent.com/xsip/CS2-Schema-Manager-Lib/refs/heads/main/Output.png "Example Output")
+![Example Output](https://raw.githubusercontent.com/xsip/CS2-Schema-Manager-Lib/refs/heads/main/Preview.png "Example Output")
 
 
 # Reference Projects
