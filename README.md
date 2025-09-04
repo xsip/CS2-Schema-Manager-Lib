@@ -24,6 +24,10 @@ namespace SDK {
 	public:
 		CSchemaManagerField* GetField(std::string fieldName);
 		std::map<const char*, CSchemaManagerField*> GetAllFields();
+		bool HasBaseClass();
+		const char* GetName();
+		uintptr_t GetPtr();
+		CSchemaManagerClass* GetBaseClass();
 	};
 
 	class CSchemaManagerModule {
@@ -49,7 +53,6 @@ namespace CS2 {
 	// "D:\SteamLibrary\steamapps\common\Counter-Strike Global Offensive"
 	__declspec(dllimport)  Dumper* SetupCSchemaSystem(bool log, std::string gameDir = {});
 }
-
 ```
 
 ### After that you can simple obtain offsets.
@@ -57,7 +60,6 @@ namespace CS2 {
 Main.cpp
 ```c++
 #include "Include.h"
-
 int main() {
 	auto dumper = CS2::SetupCSchemaSystem(true);
 	// Gettings offsets fast by selector
@@ -65,9 +67,9 @@ int main() {
 
 	// mapping through "client.dll" class list
 	auto classList = dumper->GetModule("client")->GetAllClasses();
-	for (const auto classData : classList) {
+	for (const auto classData : classList) {	
 		if (strcmp(classData.first, "C_BaseEntity") == 0) {
-			printf("Class: %s\n", classData.first);
+			printf("Class: %s | Base: %s\n", classData.first, classData.second->GetBaseClass()->GetName());
 
 			auto fieldList = classData.second->GetAllFields();
 			for (const auto fieldData : fieldList) {
@@ -75,6 +77,9 @@ int main() {
 			}
 		}
 	}
+}
+
+
 }
 
 
