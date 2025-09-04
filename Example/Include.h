@@ -14,6 +14,10 @@ namespace SDK {
 	public:
 		CSchemaManagerField* GetField(std::string fieldName);
 		std::map<const char*, CSchemaManagerField*> GetAllFields();
+		bool HasBaseClass();
+		const char* GetName();
+		uintptr_t GetPtr();
+		CSchemaManagerClass* GetBaseClass();
 	};
 
 	class CSchemaManagerModule {
