@@ -24,6 +24,11 @@ namespace SDK {
 	public:
 		CSchemaManagerField* GetField(std::string fieldName);
 		std::map<const char*, CSchemaManagerField*> GetAllFields();
+		bool HasBaseClass();
+		const char* GetName();
+		const char* GetModuleName();
+		uintptr_t GetPtr();
+		CSchemaManagerClass* GetBaseClass();
 	};
 
 	class CSchemaManagerModule {
@@ -65,9 +70,9 @@ int main() {
 
 	// mapping through "client.dll" class list
 	auto classList = dumper->GetModule("client")->GetAllClasses();
-	for (const auto classData : classList) {
+	for (const auto classData : classList) {	
 		if (strcmp(classData.first, "C_BaseEntity") == 0) {
-			printf("Class: %s\n", classData.first);
+			printf("Class: %s::%s | 0x%p ( Base: %s::%s )\n", classData.second->GetModuleName(), classData.second->GetName(), classData.second->GetPtr(), classData.second->GetBaseClass()->GetModuleName(), classData.second->GetBaseClass()->GetName());
 
 			auto fieldList = classData.second->GetAllFields();
 			for (const auto fieldData : fieldList) {
@@ -76,8 +81,6 @@ int main() {
 		}
 	}
 }
-
-
 ```
 
 # Example Output:
