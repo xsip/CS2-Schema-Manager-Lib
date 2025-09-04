@@ -9,7 +9,7 @@ int main() {
 	auto classList = dumper->GetModule("client")->GetAllClasses();
 	for (const auto classData : classList) {	
 		if (strcmp(classData.first, "C_BaseEntity") == 0) {
-			printf("Class: %s | Base: %s\n", classData.first, classData.second->GetBaseClass()->GetName());
+			printf("Class: %s::%s | 0x%p ( Base: %s::%s )\n", classData.second->GetModuleName(), classData.second->GetName(), classData.second->GetPtr(), classData.second->GetBaseClass()->GetModuleName(), classData.second->GetBaseClass()->GetName());
 
 			auto fieldList = classData.second->GetAllFields();
 			for (const auto fieldData : fieldList) {

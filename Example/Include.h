@@ -16,6 +16,7 @@ namespace SDK {
 		std::map<const char*, CSchemaManagerField*> GetAllFields();
 		bool HasBaseClass();
 		const char* GetName();
+		const char* GetModuleName();
 		uintptr_t GetPtr();
 		CSchemaManagerClass* GetBaseClass();
 	};
