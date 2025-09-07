@@ -8,12 +8,12 @@ int main() {
 	// mapping through "client.dll" class list
 	auto classList = dumper->GetModule("client")->GetAllClasses();
 	for (const auto classData : classList) {	
-		if (strcmp(classData.first, "C_BaseEntity") == 0) {
+		if (classData.first == "C_BaseEntity") {
 			printf("Class: %s::%s | 0x%p ( Base: %s::%s )\n", classData.second->GetModuleName(), classData.second->GetName(), classData.second->GetPtr(), classData.second->GetBaseClass()->GetModuleName(), classData.second->GetBaseClass()->GetName());
 
 			auto fieldList = classData.second->GetAllFields();
 			for (const auto fieldData : fieldList) {
-				printf("\tField: %s ( 0x%x )\n", fieldData.first, fieldData.second->GetOffset());
+				printf("\tField: %s ( 0x%x | %s )\n", fieldData.first.c_str(), fieldData.second->GetOffset(), fieldData.second->GetType());
 			}
 		}
 	}
