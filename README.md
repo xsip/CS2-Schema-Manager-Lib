@@ -1,5 +1,5 @@
 # CS2-SchemaManager-Lib
-### CS2 SchemaManager Lib is a C++ Library for getting SchemaSystem offsets fast in Counter Strike 2.
+### CS2 SchemaManager Lib is a C++ Library for getting SchemaSystem offsets and enums fast in Counter Strike 2.
 ### This could be used for external Cheats!
 
 # Usage
@@ -14,27 +14,48 @@ Include.h
 #include <map >
 
 namespace SDK {
+
 	class CSchemaManagerField {
 	public:
 		DWORD GetOffset();
 		const char* GetType();
 	};
 
+	class CSchemaManagerEnumProperty {
+	public:
+		const char* GetValue();
+		const char* GetName();
+	};
+
+	class CSchemaManagerEnum {
+	public:
+		CSchemaManagerEnumProperty GetEnumerator(std::string fieldName);
+		uintptr_t GetPtr();
+		const char* GetModuleName();
+		const char* GetName();
+		const char* GetType();
+		std::map<std::string, CSchemaManagerEnumProperty> GetAllEnumerators();
+	};
+
 	class CSchemaManagerClass {
 	public:
 		CSchemaManagerField* GetField(std::string fieldName);
-		std::map<const char*, CSchemaManagerField*> GetAllFields();
+		std::map<std::string, CSchemaManagerField*> GetAllFields();
 		bool HasBaseClass();
 		const char* GetName();
 		const char* GetModuleName();
 		uintptr_t GetPtr();
+		uint32_t GetSize();
 		CSchemaManagerClass* GetBaseClass();
 	};
 
 	class CSchemaManagerModule {
 	public:
 		CSchemaManagerClass* GetClass(std::string className);
-		std::map<const char*, CSchemaManagerClass*> GetAllClasses();
+		std::map<std::string, CSchemaManagerClass*> GetAllClasses();
+
+		CSchemaManagerEnum* GetEnum(std::string szEnumName);
+		std::map<std::string, CSchemaManagerEnum*> GetAllEnums();
 	};
 
 }
@@ -45,7 +66,7 @@ namespace CS2 {
 	public:
 		DWORD GetOffsetFast(std::string szSchemaPath);
 		SDK::CSchemaManagerModule* GetModule(std::string moduleName);
-		std::map <const char*, SDK::CSchemaManagerModule*> GetAllModules();
+		std::map <std::string, SDK::CSchemaManagerModule*> GetAllModules();
 
 	};
 
@@ -54,6 +75,7 @@ namespace CS2 {
 	// "D:\SteamLibrary\steamapps\common\Counter-Strike Global Offensive"
 	__declspec(dllimport)  Dumper* SetupCSchemaSystem(bool log, std::string gameDir = {});
 }
+
 
 ```
 
@@ -71,16 +93,18 @@ int main() {
 	// mapping through "client.dll" class list
 	auto classList = dumper->GetModule("client")->GetAllClasses();
 	for (const auto classData : classList) {	
-		if (strcmp(classData.first, "C_BaseEntity") == 0) {
+		if (classData.first == "C_BaseEntity") {
 			printf("Class: %s::%s | 0x%p ( Base: %s::%s )\n", classData.second->GetModuleName(), classData.second->GetName(), classData.second->GetPtr(), classData.second->GetBaseClass()->GetModuleName(), classData.second->GetBaseClass()->GetName());
 
 			auto fieldList = classData.second->GetAllFields();
 			for (const auto fieldData : fieldList) {
-				printf("\tField: %s ( 0x%x )\n", fieldData.first, fieldData.second->GetOffset());
+				printf("\tField: %s ( 0x%x | %s )\n", fieldData.first.c_str(), fieldData.second->GetOffset(), fieldData.second->GetType());
 			}
 		}
 	}
 }
+
+
 ```
 
 # Example Output:
